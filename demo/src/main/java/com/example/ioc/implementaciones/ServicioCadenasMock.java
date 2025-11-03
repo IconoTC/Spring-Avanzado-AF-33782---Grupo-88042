@@ -11,9 +11,9 @@ import com.example.ioc.contratos.RepositorioCadenas;
 import com.example.ioc.contratos.Servicio;
 import com.example.ioc.contratos.ServicioCadenas;
 
-@Service
+//@Service
 //@Profile("test")
-@Pruebas
+//@Pruebas
 public class ServicioCadenasMock implements ServicioCadenas {
 	private final RepositorioCadenas dao;
 	private final NotificationService notify;

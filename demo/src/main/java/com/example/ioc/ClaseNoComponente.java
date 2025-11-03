@@ -14,6 +14,7 @@ public class ClaseNoComponente {
 	
 	public ClaseNoComponente(Configuracion configuracion) {
 		this.configuracion = configuracion;
+//		notify.add(getClass().getSimpleName() + " Constructor");
 	}
 	@PostConstruct
 	private void despuesDelConstructor() {

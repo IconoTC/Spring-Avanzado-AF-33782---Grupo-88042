@@ -2,6 +2,7 @@ package com.example.ioc.implementaciones;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.annotation.Primary;
 import org.springframework.context.annotation.Profile;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Repository;
@@ -11,7 +12,8 @@ import com.example.ioc.contratos.Configuracion;
 import com.example.ioc.contratos.RepositorioCadenas;
 
 @Repository
-@Profile({"prod", "default"})
+//@Profile({"prod", "default"})
+@Primary
 public class RepositorioCadenasImpl implements RepositorioCadenas {
 	private final Configuracion configuracion;
 	private final NotificationService notify;
@@ -20,7 +22,7 @@ public class RepositorioCadenasImpl implements RepositorioCadenas {
 		this.notify = notify;
 		notify.add(getClass().getSimpleName() + " Constructor");
 		this.configuracion = configuracion;
-		// configuracion.config();
+		configuracion.config();
 	}
 
 	@Override
