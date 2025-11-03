@@ -12,9 +12,9 @@ public class ConstructorConValores {
 	private final NotificationService notify;
 	
 	@ConstructorProperties({"version", "otroAutor"})
-	public ConstructorConValores(int version, String autor, NotificationService notify) {
+	public ConstructorConValores(int version, String otroAutor, NotificationService notify) {
 		this.notify = notify;
-		notify.add(getClass().getSimpleName() + " - Version: " + version + " Autor: " + autor);
+		notify.add(getClass().getSimpleName() + " - Version: " + version + " Autor: " + otroAutor);
 	}
 	
 	public void titulo(String tratamiento, String autor) {

@@ -1,7 +1,11 @@
 package com.example;
 
+import java.util.List;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -9,8 +13,11 @@ import org.springframework.context.annotation.Bean;
 
 import com.example.ioc.ClaseNoComponente;
 import com.example.ioc.NotificationService;
+import com.example.ioc.Rango;
 import com.example.ioc.anotaciones.Remoto;
+import com.example.ioc.contratos.Servicio;
 import com.example.ioc.contratos.ServicioCadenas;
+import com.example.ioc.notificaciones.ConstructorConValores;
 import com.example.ioc.notificaciones.Sender;
 
 @SpringBootApplication
@@ -51,6 +58,7 @@ public class DemoApplication implements CommandLineRunner {
 		return arg -> {
 //			ServicioCadenas srv = new ServicioCadenasImpl(new RepositorioCadenasImpl(new ConfiguracionImpl(notify), notify), notify);
 			srv.get().forEach(notify::add);
+			srv.modify("add");
 			srv.modify("modificado");
 			System.out.println("cadenaDeDependencias -------------------------------->");
 			notify.getListado().forEach(System.out::println);
@@ -86,12 +94,34 @@ public class DemoApplication implements CommandLineRunner {
 		};
 	}
 
-	@Bean
+//	@Bean
 	CommandLineRunner beansCualificados(@Qualifier("local") Sender local, @Remoto Sender remoto) {
-		return arg -> {
+		return _ -> {
 			local.send("Hola local");
 			remoto.send("Hola remoto");
 		};
 	}
-
+	
+//	@Bean
+	CommandLineRunner multiplesBeans(List<Sender> senders, Map<String, Sender> mapa, List<Servicio> servicios) {
+		return arg -> {
+			senders.forEach(s -> s.send(s.getClass().getCanonicalName()));
+			mapa.forEach((k, v) -> System.out.println("%s -> %s".formatted(k, v.getClass().getCanonicalName())));
+			servicios.forEach(s -> System.out.println(s.getClass().getCanonicalName()));
+		};
+	}
+	
+	@Bean
+	CommandLineRunner inyectaValores(@Value("${mi.valor:Sin valor}") String miValor, Rango rango,
+			@Value("${spring.datasource.url}") String db, ConstructorConValores valores) {
+		return arg -> {
+			System.out.println(miValor);
+			System.out.println(rango);
+			System.out.println(db);
+			System.out.println("inyectaValores -------------------------------->");
+			notify.getListado().forEach(System.out::println);
+			notify.clear();
+			System.out.println("<--------------------------------");
+		};
+	}
 }
