@@ -21,7 +21,7 @@ public class DemoApplication implements CommandLineRunner {
 	@Bean
 	CommandLineRunner ejemplos() {
 		return arg -> {
-			System.out.println("Hola mundo");
+			System.out.println("Hola mundo...");
 		};
 	}
 }

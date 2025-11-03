@@ -57,6 +57,7 @@ build/
 
 ### VS Code ###
 .vscode/
+!launch.json
 
 # SonarQube
 .sonar/
