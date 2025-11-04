@@ -936,6 +936,7 @@ El resultado al ejecutar es:
     │   ├─ SpringIocLabApplication.java        ← Clase principal
     │   ├─ config/AppConfig.java               ← Beans configurados manualmente
     │   ├─ model/
+    │   │   ├─ ContadorBean.java               ← Bean @Scope("prototype")
     │   │   ├─ Saludo.java                     ← Bean simple
     │   │   ├─ Saludar.java                    ← Interfaz
     │   │   ├─ SaludoLento.java                ← Lazy Bean
@@ -952,7 +953,7 @@ El resultado al ejecutar es:
 | --- | --- | --- |
 | Bean | @Component, @Bean | Saludo |
 | DI | @Autowired, constructor | PersonaService |
-| Scopes | @Scope("prototype") | Saludo |
+| Scopes | @Scope("prototype") | Saludo, ContadorBean |
 | Lazy loading | @Lazy | SaludoLento |
 | Ciclo de vida | @PostConstruct, @PreDestroy | Saludo |
 | Calificadores | @Qualifier, @Primary | SaludoFormal vs SaludoInformal |
