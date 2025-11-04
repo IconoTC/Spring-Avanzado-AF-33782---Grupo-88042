@@ -53,8 +53,8 @@ public class NotificationServiceImpl implements NotificationService {
 		doEvent("Borrados todos los mensajes.");
 	}
 
-	@Autowired 
 	private ApplicationEventPublisher publisher;
+	@Autowired 
 	public void setPublisher(ApplicationEventPublisher publisher) {
 		this.publisher = publisher;
 	}

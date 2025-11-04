@@ -43,6 +43,7 @@ public class SpringIocLabApplication implements CommandLineRunner {
         System.out.println("\n3) Inyección por campo (FieldInjectionService):");
         fieldService.saludar();
         
+        System.out.println();
         var c1 = ctx.getBean(ContadorBean.class);
         var c2 = ctx.getBean(ContadorBean.class);
         System.out.println("\n4) Bean con scope %s:".formatted(c1 == c2 ? "singleton" : "prototype"));

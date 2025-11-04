@@ -10,9 +10,11 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.event.EventListener;
 import org.springframework.context.support.FileSystemXmlApplicationContext;
 
 import com.example.ioc.ClaseNoComponente;
+import com.example.ioc.GenericoEvent;
 import com.example.ioc.NotificationService;
 import com.example.ioc.Rango;
 import com.example.ioc.anotaciones.Remoto;
@@ -54,7 +56,7 @@ public class DemoApplication implements CommandLineRunner {
 		};
 	}
 	
-//	@Bean
+	@Bean
 	CommandLineRunner cadenaDeDependencias(ServicioCadenas srv ) {
 		return _ -> {
 //			ServicioCadenas srv = new ServicioCadenasImpl(new RepositorioCadenasImpl(new ConfiguracionImpl(notify), notify), notify);
@@ -127,7 +129,7 @@ public class DemoApplication implements CommandLineRunner {
 		};
 	}
 
-	@Bean
+//	@Bean
 	CommandLineRunner configuracionEnXML() {
 		return _ -> {
 			try (var contexto = new FileSystemXmlApplicationContext("applicationContext.xml")) {
@@ -149,5 +151,16 @@ public class DemoApplication implements CommandLineRunner {
 			}
 		};
 	}
-
+	@EventListener
+	void eventHandler(GenericoEvent ev) {
+		System.err.println("Evento recibido: %s -> %s".formatted(ev.origen(), ev.carga()));
+	}
+	@EventListener
+	void otroEventHandler(GenericoEvent ev) {
+		System.err.println("Otro tratamiento: %s -> %s".formatted(ev.origen(), ev.carga()));
+	}
+	@EventListener
+	void eventRepository(String ev) {
+		System.err.println("Evento del repositorio: %s".formatted(ev));
+	}
 }
