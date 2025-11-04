@@ -11,23 +11,29 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.context.support.FileSystemXmlApplicationContext;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 
+import com.example.aop.AuthenticationService;
+import com.example.aop.introductions.Visible;
 import com.example.ioc.ClaseNoComponente;
 import com.example.ioc.Dummy;
 import com.example.ioc.NotificationService;
 import com.example.ioc.Rango;
 import com.example.ioc.anotaciones.Remoto;
+import com.example.ioc.contratos.Configuracion;
 import com.example.ioc.contratos.Servicio;
 import com.example.ioc.contratos.ServicioCadenas;
+import com.example.ioc.implementaciones.ConfiguracionImpl;
 import com.example.ioc.notificaciones.ConstructorConValores;
 import com.example.ioc.notificaciones.Sender;
 
 @EnableAsync
 @EnableScheduling
+@EnableAspectJAutoProxy
 @SpringBootApplication
 public class DemoApplication implements CommandLineRunner {
 
@@ -61,12 +67,12 @@ public class DemoApplication implements CommandLineRunner {
 		};
 	}
 	
-	@Bean
+//	@Bean
 	CommandLineRunner cadenaDeDependencias(ServicioCadenas srv ) {
 		return _ -> {
 //			ServicioCadenas srv = new ServicioCadenasImpl(new RepositorioCadenasImpl(new ConfiguracionImpl(notify), notify), notify);
 			srv.get().forEach(notify::add);
-			srv.modify("add");
+			srv.add("add");
 			srv.modify("modificado");
 //			System.out.println("cadenaDeDependencias -------------------------------->");
 //			notify.getListado().forEach(System.out::println);
@@ -180,7 +186,7 @@ public class DemoApplication implements CommandLineRunner {
 		}
 	}
 	
-	@Bean
+//	@Bean
 	CommandLineRunner asincrono(Dummy dummy) {
 		return arg -> {
 			var obj = dummy; // new Dummy();
@@ -193,6 +199,60 @@ public class DemoApplication implements CommandLineRunner {
 			obj.calcularResultadoAsync(1, 2, 3).thenAccept(result -> notify.add(result));
 			obj.calcularResultadoAsync().thenAccept(result -> notify.add(result));
 			System.err.println("Termino de mandar hacer las cosas");
+		};
+	}
+
+//	@Bean
+	CommandLineRunner aop(Configuracion config, Dummy dummy) {
+		return args -> {
+			notify.clear();
+			try {
+				System.out.println(config.getClass().getSimpleName());
+				int v = config.getNext();
+				notify.add("Mensaje " + v + " " + config.getNext() + " " + config.getNext());
+				var cfg = new ConfiguracionImpl(notify);
+				System.out.println(cfg.getClass().getSimpleName());
+				notify.add("Mensaje " + cfg.getNext() + " " + cfg.getNext() + " " + cfg.getNext());
+				notify.getListado().forEach(System.out::println);
+				config.config();
+			} catch (Exception e) {
+				System.err.println("Desde el consejo: " + e.getMessage());
+			}
+			try {
+				dummy.setControlado(null);
+				System.out.println("No llega la excepcion");
+				System.out.println("Controlado: " + dummy.getControlado().get());
+				dummy.setControlado("minuscula");
+				System.out.println("Controlado: " + dummy.getControlado().get());
+			} catch (Exception e) {
+				System.err.println("Error controlado: " + e.getMessage());
+			}
+			if(dummy instanceof Visible v) {
+				System.out.println(v.isVisible() ? "Es visible" : "Es invisible");
+				v.mostrar();
+				System.out.println(v.isVisible() ? "Es visible" : "Es invisible");
+				v.ocultar();
+				System.out.println(v.isVisible() ? "Es visible" : "Es invisible");
+			} else {
+				System.err.println("No implementa Visible");
+			}
+		};
+	}
+	@Bean
+	CommandLineRunner seguridad(ServicioCadenas srv, AuthenticationService auth ) {
+		return _ -> {
+			try {
+				auth.login();
+				srv.get().forEach(notify::add);
+				srv.add("add");
+				srv.modify("modificado");
+			} catch (Exception e) {
+				System.err.println(e.getMessage());
+			}
+//			System.out.println("cadenaDeDependencias -------------------------------->");
+//			notify.getListado().forEach(System.out::println);
+//			notify.clear();
+//			System.out.println("<--------------------------------");
 		};
 	}
 }
