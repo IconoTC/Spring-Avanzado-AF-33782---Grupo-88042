@@ -10,6 +10,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.support.FileSystemXmlApplicationContext;
 
 import com.example.ioc.ClaseNoComponente;
 import com.example.ioc.NotificationService;
@@ -55,7 +56,7 @@ public class DemoApplication implements CommandLineRunner {
 	
 //	@Bean
 	CommandLineRunner cadenaDeDependencias(ServicioCadenas srv ) {
-		return arg -> {
+		return _ -> {
 //			ServicioCadenas srv = new ServicioCadenasImpl(new RepositorioCadenasImpl(new ConfiguracionImpl(notify), notify), notify);
 			srv.get().forEach(notify::add);
 			srv.modify("add");
@@ -72,7 +73,7 @@ public class DemoApplication implements CommandLineRunner {
 
 //	@Bean
 	CommandLineRunner cardinalidad(ServicioCadenas srv ) {
-		return arg -> {
+		return _ -> {
 			if(dummy == null) {
 				System.err.println("Falta la implementación de NotificationService");
 				return;
@@ -87,7 +88,7 @@ public class DemoApplication implements CommandLineRunner {
 	
 //	@Bean
 	CommandLineRunner beansPorNombre(Sender correo, Sender fichero, Sender twittea) {
-		return arg -> {
+		return _ -> {
 			correo.send("Hola mundo");
 			fichero.send("Hola mundo");
 			twittea.send("Hola mundo");
@@ -103,18 +104,19 @@ public class DemoApplication implements CommandLineRunner {
 	}
 	
 //	@Bean
+	@SuppressWarnings("rawtypes")
 	CommandLineRunner multiplesBeans(List<Sender> senders, Map<String, Sender> mapa, List<Servicio> servicios) {
-		return arg -> {
+		return _ -> {
 			senders.forEach(s -> s.send(s.getClass().getCanonicalName()));
 			mapa.forEach((k, v) -> System.out.println("%s -> %s".formatted(k, v.getClass().getCanonicalName())));
 			servicios.forEach(s -> System.out.println(s.getClass().getCanonicalName()));
 		};
 	}
 	
-	@Bean
+//	@Bean
 	CommandLineRunner inyectaValores(@Value("${mi.valor:Sin valor}") String miValor, Rango rango,
 			@Value("${spring.datasource.url}") String db, ConstructorConValores valores) {
-		return arg -> {
+		return _ -> {
 			System.out.println(miValor);
 			System.out.println(rango);
 			System.out.println(db);
@@ -124,4 +126,28 @@ public class DemoApplication implements CommandLineRunner {
 			System.out.println("<--------------------------------");
 		};
 	}
+
+	@Bean
+	CommandLineRunner configuracionEnXML() {
+		return _ -> {
+			try (var contexto = new FileSystemXmlApplicationContext("applicationContext.xml")) {
+				var notify = contexto.getBean(NotificationService.class);
+				System.out.println("configuracionEnXML ===================>");
+				var srv = (ServicioCadenas) contexto.getBean("servicioCadenas");
+				System.out.println(srv.getClass().getName());
+				contexto.getBean(NotificationService.class).getListado().forEach(System.out::println);
+				System.out.println("===================>");
+				srv.get().forEach(notify::add);
+				srv.add("Hola mundo");
+				notify.add(srv.get(1));
+				srv.modify("modificado");
+				System.out.println("===================>");
+				notify.getListado().forEach(System.out::println);
+				notify.clear();
+				System.out.println("<===================");
+				((Sender) contexto.getBean("sender")).send("Hola mundo");
+			}
+		};
+	}
+
 }
