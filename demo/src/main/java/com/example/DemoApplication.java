@@ -2,6 +2,7 @@ package com.example;
 
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -10,11 +11,13 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.event.EventListener;
 import org.springframework.context.support.FileSystemXmlApplicationContext;
+import org.springframework.scheduling.annotation.EnableAsync;
+import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.annotation.Scheduled;
 
 import com.example.ioc.ClaseNoComponente;
-import com.example.ioc.GenericoEvent;
+import com.example.ioc.Dummy;
 import com.example.ioc.NotificationService;
 import com.example.ioc.Rango;
 import com.example.ioc.anotaciones.Remoto;
@@ -23,6 +26,8 @@ import com.example.ioc.contratos.ServicioCadenas;
 import com.example.ioc.notificaciones.ConstructorConValores;
 import com.example.ioc.notificaciones.Sender;
 
+@EnableAsync
+@EnableScheduling
 @SpringBootApplication
 public class DemoApplication implements CommandLineRunner {
 
@@ -63,10 +68,10 @@ public class DemoApplication implements CommandLineRunner {
 			srv.get().forEach(notify::add);
 			srv.modify("add");
 			srv.modify("modificado");
-			System.out.println("cadenaDeDependencias -------------------------------->");
-			notify.getListado().forEach(System.out::println);
-			notify.clear();
-			System.out.println("<--------------------------------");
+//			System.out.println("cadenaDeDependencias -------------------------------->");
+//			notify.getListado().forEach(System.out::println);
+//			notify.clear();
+//			System.out.println("<--------------------------------");
 		};
 	}
 
@@ -151,16 +156,43 @@ public class DemoApplication implements CommandLineRunner {
 			}
 		};
 	}
-	@EventListener
-	void eventHandler(GenericoEvent ev) {
-		System.err.println("Evento recibido: %s -> %s".formatted(ev.origen(), ev.carga()));
+//	@EventListener
+//	void eventHandler(GenericoEvent ev) {
+//		System.err.println("Evento recibido: %s -> %s".formatted(ev.origen(), ev.carga()));
+//	}
+//	@EventListener
+//	void otroEventHandler(GenericoEvent ev) {
+//		System.err.println("Otro tratamiento: %s -> %s".formatted(ev.origen(), ev.carga()));
+//	}
+//	@EventListener
+//	void eventRepository(String ev) {
+//		System.err.println("Evento del repositorio: %s".formatted(ev));
+//	}
+	
+	@Scheduled(timeUnit = TimeUnit.SECONDS, fixedRate = 5, initialDelay = 2)
+	void periodico() {
+//		System.out.println("Han pasado 5 segundos");
+		if(notify.hasMessages()) {
+			System.out.println("@Scheduled -------------------------------->");
+			notify.getListado().forEach(System.out::println);
+			notify.clear();
+			System.out.println("<--------------------------------");
+		}
 	}
-	@EventListener
-	void otroEventHandler(GenericoEvent ev) {
-		System.err.println("Otro tratamiento: %s -> %s".formatted(ev.origen(), ev.carga()));
-	}
-	@EventListener
-	void eventRepository(String ev) {
-		System.err.println("Evento del repositorio: %s".formatted(ev));
+	
+	@Bean
+	CommandLineRunner asincrono(Dummy dummy) {
+		return arg -> {
+			var obj = dummy; // new Dummy();
+			System.err.println(obj.getClass().getCanonicalName());
+//			obj.ejecutarAutoInvocado(1);
+//			obj.ejecutarAutoInvocado(2);
+			obj.ejecutarTareaSimpleAsync(1);
+			obj.ejecutarTareaSimpleAsync(2);
+			obj.calcularResultadoAsync(10, 20, 30, 40, 50).thenAccept(result -> notify.add(result));
+			obj.calcularResultadoAsync(1, 2, 3).thenAccept(result -> notify.add(result));
+			obj.calcularResultadoAsync().thenAccept(result -> notify.add(result));
+			System.err.println("Termino de mandar hacer las cosas");
+		};
 	}
 }

@@ -9,18 +9,21 @@ import org.springframework.lang.NonNull;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
+import io.micrometer.common.lang.Nullable;
+
 @Component
 @Scope("prototype")
 public class Dummy {
 	private String valor;
 
-	@NonNull 
+	@Nullable 
 	public String getDescontrolado() {
 		return valor;
 	}
 
 	public void setDescontrolado(@NonNull String value) {
-		valor = value;
+		assert value !=null;
+		valor = value.toUpperCase();
 	}
 
 	public boolean hasDescontrolado() {
