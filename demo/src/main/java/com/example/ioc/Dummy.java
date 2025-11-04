@@ -48,6 +48,11 @@ public class Dummy {
 		valor = null;
 	}
 
+	
+	public void ejecutarAutoInvocado(int i) {
+		ejecutarTareaSimpleAsync(i);
+	}
+	
 	@Async
 	public void ejecutarTareaSimpleAsync(int i) {
 		ejecutarTareaSimple(i);

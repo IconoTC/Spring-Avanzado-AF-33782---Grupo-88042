@@ -186,15 +186,15 @@ public class DemoApplication implements CommandLineRunner {
 		}
 	}
 	
-//	@Bean
+	@Bean
 	CommandLineRunner asincrono(Dummy dummy) {
 		return arg -> {
 			var obj = dummy; // new Dummy();
 			System.err.println(obj.getClass().getCanonicalName());
-//			obj.ejecutarAutoInvocado(1);
-//			obj.ejecutarAutoInvocado(2);
-			obj.ejecutarTareaSimpleAsync(1);
-			obj.ejecutarTareaSimpleAsync(2);
+			obj.ejecutarAutoInvocado(1);
+			obj.ejecutarAutoInvocado(2);
+//			obj.ejecutarTareaSimpleAsync(1);
+//			obj.ejecutarTareaSimpleAsync(2);
 			obj.calcularResultadoAsync(10, 20, 30, 40, 50).thenAccept(result -> notify.add(result));
 			obj.calcularResultadoAsync(1, 2, 3).thenAccept(result -> notify.add(result));
 			obj.calcularResultadoAsync().thenAccept(result -> notify.add(result));
