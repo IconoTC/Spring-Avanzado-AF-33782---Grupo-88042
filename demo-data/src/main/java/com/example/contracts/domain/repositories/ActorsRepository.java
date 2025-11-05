@@ -1,9 +1,29 @@
 package com.example.contracts.domain.repositories;
 
+import java.util.List;
+
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.jpa.repository.Meta;
+import org.springframework.data.jpa.repository.NativeQuery;
+import org.springframework.data.jpa.repository.Query;
 
 import com.example.domain.entities.Actor;
 
-public interface ActorsRepository extends JpaRepository<Actor, Integer> {
-
+public interface ActorsRepository extends JpaRepository<Actor, Integer>, JpaSpecificationExecutor<Actor> {
+	List<Actor> findTop5ByFirstNameStartingWithIgnoreCaseOrderByLastNameDesc(String prefijo);
+	List<Actor> findTop5ByFirstNameStartingWithIgnoreCase(String prefijo, Sort orderBy);
+	
+	@Meta(comment = "DSL")
+	@EntityGraph(attributePaths = {"filmActors.film"})
+	List<Actor> findByIdGreaterThanEqual(int primero);
+	@Meta(comment = "JPQL")
+	@Query("from Actor a where a.id >= ?1")
+	List<Actor> findNovedadesJPQL(int primero);
+	@Meta(comment = "SQL")
+	@NativeQuery("select * from actor a where a.actor_id >= :primero")
+	List<Actor> findNovedadesSQL(int primero);
+	
 }
