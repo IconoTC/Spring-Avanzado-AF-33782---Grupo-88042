@@ -1,4 +1,4 @@
-package com.example.core.contracts.domain.exceptions;
+package com.example.core.domain.exceptions;
 
 import java.io.Serial;
 import java.util.Map;
