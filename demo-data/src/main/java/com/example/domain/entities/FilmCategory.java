@@ -2,7 +2,7 @@ package com.example.domain.entities;
 
 import java.io.Serializable;
 import jakarta.persistence.*;
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 
 /**
@@ -19,7 +19,7 @@ public class FilmCategory implements Serializable {
 	private FilmCategoryPK id;
 
 	@Column(name="last_update", insertable=false, updatable=false, nullable=false)
-	private Timestamp lastUpdate;
+	private LocalDateTime lastUpdate;
 
 	//bi-directional many-to-one association to Category
 	@ManyToOne
@@ -42,11 +42,11 @@ public class FilmCategory implements Serializable {
 		this.id = id;
 	}
 
-	public Timestamp getLastUpdate() {
+	public LocalDateTime getLastUpdate() {
 		return this.lastUpdate;
 	}
 
-	public void setLastUpdate(Timestamp lastUpdate) {
+	public void setLastUpdate(LocalDateTime lastUpdate) {
 		this.lastUpdate = lastUpdate;
 	}
 

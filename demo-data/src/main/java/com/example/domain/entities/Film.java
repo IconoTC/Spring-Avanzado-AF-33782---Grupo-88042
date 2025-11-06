@@ -3,7 +3,7 @@ package com.example.domain.entities;
 import java.io.Serializable;
 import jakarta.persistence.*;
 import java.math.BigDecimal;
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.List;
 
 
@@ -26,7 +26,7 @@ public class Film implements Serializable {
 	private String description;
 
 	@Column(name="last_update", insertable=false, updatable=false, nullable=false)
-	private Timestamp lastUpdate;
+	private LocalDateTime lastUpdate;
 
 	private Integer length;
 
@@ -85,11 +85,11 @@ public class Film implements Serializable {
 		this.description = description;
 	}
 
-	public Timestamp getLastUpdate() {
+	public LocalDateTime getLastUpdate() {
 		return this.lastUpdate;
 	}
 
-	public void setLastUpdate(Timestamp lastUpdate) {
+	public void setLastUpdate(LocalDateTime lastUpdate) {
 		this.lastUpdate = lastUpdate;
 	}
 

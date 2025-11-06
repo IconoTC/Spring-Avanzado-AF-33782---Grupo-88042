@@ -2,7 +2,7 @@ package com.example.domain.entities;
 
 import java.io.Serializable;
 import jakarta.persistence.*;
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.List;
 
 
@@ -22,7 +22,7 @@ public class Language implements Serializable {
 	private int id;
 
 	@Column(name="last_update", insertable=false, updatable=false, nullable=false)
-	private Timestamp lastUpdate;
+	private LocalDateTime lastUpdate;
 
 	@Column(nullable=false, length=20)
 	private String name;
@@ -46,11 +46,11 @@ public class Language implements Serializable {
 		this.id = id;
 	}
 
-	public Timestamp getLastUpdate() {
+	public LocalDateTime getLastUpdate() {
 		return this.lastUpdate;
 	}
 
-	public void setLastUpdate(Timestamp lastUpdate) {
+	public void setLastUpdate(LocalDateTime lastUpdate) {
 		this.lastUpdate = lastUpdate;
 	}
 
