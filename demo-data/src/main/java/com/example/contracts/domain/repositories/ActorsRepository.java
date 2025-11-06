@@ -12,6 +12,8 @@ import org.springframework.data.jpa.repository.Query;
 
 import com.example.core.contracts.domain.repositories.RepositoryWithProjections;
 import com.example.domain.entities.Actor;
+import com.example.domain.entities.models.ActorDTO;
+import com.example.domain.entities.models.ActorShort;
 
 public interface ActorsRepository extends JpaRepository<Actor, Integer>, JpaSpecificationExecutor<Actor>, RepositoryWithProjections {
 	List<Actor> findTop5ByFirstNameStartingWithIgnoreCaseOrderByLastNameDesc(String prefijo);
@@ -27,4 +29,8 @@ public interface ActorsRepository extends JpaRepository<Actor, Integer>, JpaSpec
 	@NativeQuery("select * from actor a where a.actor_id >= :primero")
 	List<Actor> findNovedadesSQL(int primero);
 	
+	List<ActorDTO> readByIdGreaterThanEqual(int primero);
+	List<ActorShort> queryByIdGreaterThanEqual(int primero);
+	
+	<T> List<T> findByIdGreaterThanEqual(int primero, Class<T> type);
 }

@@ -7,8 +7,14 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.example.contracts.domain.repositories.ActorsRepository;
 import com.example.contracts.domain.repositories.CategoriesRepository;
+import com.example.contracts.domain.repositories.PeliculasRepository;
 import com.example.domain.entities.Actor;
 import com.example.domain.entities.Category;
+import com.example.domain.entities.models.ActorDTO;
+import com.example.domain.entities.models.ActorShort;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 @Component
 public class EjemplosDatos {
@@ -86,5 +92,41 @@ public class EjemplosDatos {
 			System.err.println("%s: %s".formatted(e.getClass().getSimpleName(), e.getMessage()));
 		}
 		
+	}
+	
+	@Autowired
+	PeliculasRepository daoPelis;
+	
+	record Pelis(int id, String title) {}
+	
+	public void proyecciones() {
+		try {
+//			daoActors.findByIdGreaterThanEqual(195).forEach(System.out::println);
+//			daoActors.findByIdGreaterThanEqual(195).forEach(item -> System.out.println(ActorDTO.from(item)));
+//			daoActors.readByIdGreaterThanEqual(200).forEach(System.out::println);
+//			daoActors.queryByIdGreaterThanEqual(200).forEach(item -> System.out.println(item.getId() + " " + item.getNombre()));
+//			daoActors.findByIdGreaterThanEqual(200, ActorDTO.class).forEach(System.out::println);
+//			daoActors.findByIdGreaterThanEqual(200, ActorShort.class).forEach(item -> System.out.println(item.getId() + " " + item.getNombre()));
+//			daoPelis.findAllBy(Pelis.class).forEach(item -> System.out.println(item.id() + " " + item.title()));
+		} catch (Exception e) {
+			System.err.println("%s: %s".formatted(e.getClass().getSimpleName(), e.getMessage()));
+		}		
+	}
+	
+	@Autowired
+	ObjectMapper mapper;
+	
+	@Transactional
+	public void serializacion() {
+		try {
+			System.out.println(mapper.writeValueAsString(daoCategories.findById(1)));
+			var objectMapper = new com.fasterxml.jackson.dataformat.xml.XmlMapper();
+			objectMapper.registerModule(new JavaTimeModule())
+            .configure(SerializationFeature.WRITE_DATE_TIMESTAMPS_AS_NANOSECONDS, false);
+			System.out.println(objectMapper.writeValueAsString(daoCategories.findById(1).get()));
+
+		} catch (Exception e) {
+			System.err.println("%s: %s".formatted(e.getClass().getSimpleName(), e.getMessage()));
+		}		
 	}
 }

@@ -6,6 +6,11 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 
 /**
  * The persistent class for the category database table.
@@ -23,13 +28,18 @@ public class Category implements Serializable {
 	private int id;
 
 	@Column(name="last_update", insertable=false, updatable=false, nullable=false)
+	@JsonFormat(pattern = "dd/MM/yyyy hh:mm:ss")
+	@JsonProperty("modificacion")
+	@JsonIgnore
 	private LocalDateTime lastUpdate;
 
 	@Column(nullable=false, length=25)
+	@JsonProperty("categoria")
 	private String name;
 
 	//bi-directional many-to-one association to FilmCategory
 	@OneToMany(mappedBy="category")
+	@JsonBackReference
 	private List<FilmCategory> filmCategories;
 
 	public Category() {
