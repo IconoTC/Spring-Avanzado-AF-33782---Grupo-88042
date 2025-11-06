@@ -23,7 +23,7 @@ public class DemoDataApplication implements CommandLineRunner {
 //			demos.run();
 //			demos.actores();
 //			demos.consultas();
-			demos.relaciones();
+//			demos.relaciones();
 //			try {
 //				demos.transaccion();
 //			} catch (Exception e) {

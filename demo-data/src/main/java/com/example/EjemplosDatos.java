@@ -62,11 +62,13 @@ public class EjemplosDatos {
 	CategoriesRepository daoCategories;
 	
 	
-	@Transactional
-	public void transaccion() {
+	@Transactional(rollbackFor = { Exception.class })
+	public void transaccion() throws Exception {
 		daoActors.save(new Actor("Pepito", "Grillo"));
 		daoActors.save(new Actor("Carmelo", "Coton"));
 		daoCategories.save(new Category(0, "Serie B"));
-		daoActors.deleteById(1);;
+		if(true)
+			throw new Exception("Error forzado para hacer rollback");
+//		daoActors.deleteById(1);;
 	}
 }
