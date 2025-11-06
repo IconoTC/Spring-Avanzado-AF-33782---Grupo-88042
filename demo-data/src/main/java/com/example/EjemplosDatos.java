@@ -67,8 +67,24 @@ public class EjemplosDatos {
 		daoActors.save(new Actor("Pepito", "Grillo"));
 		daoActors.save(new Actor("Carmelo", "Coton"));
 		daoCategories.save(new Category(0, "Serie B"));
-		if(true)
-			throw new Exception("Error forzado para hacer rollback");
+//		if(true)
+//			throw new Exception("Error forzado para hacer rollback");
 //		daoActors.deleteById(1);;
+	}
+	
+	public void validaciones() {
+		try {
+			var actor =new Actor(null, "PP");
+//			if(actor.isInvalid()) {
+//				System.out.println(">>> Invalid");
+//				System.err.println(actor.getErrorsMessage());			
+//			} else {
+				daoActors.save(actor);
+//				System.out.println(">>> Guardado");
+//			}
+		} catch (Exception e) {
+			System.err.println("%s: %s".formatted(e.getClass().getSimpleName(), e.getMessage()));
+		}
+		
 	}
 }

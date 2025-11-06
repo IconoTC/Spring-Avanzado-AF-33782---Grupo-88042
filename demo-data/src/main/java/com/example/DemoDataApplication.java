@@ -24,11 +24,12 @@ public class DemoDataApplication implements CommandLineRunner {
 //			demos.actores();
 //			demos.consultas();
 //			demos.relaciones();
-//			try {
-//				demos.transaccion();
-//			} catch (Exception e) {
-//				e.printStackTrace();
-//			}
+			try {
+				demos.transaccion();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+//			demos.validaciones();
 		};
 	}
 
