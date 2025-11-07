@@ -22,7 +22,7 @@ public class DemoDataApplication implements CommandLineRunner {
 		System.err.println("Aplicacion arrancada ...");
 	}
 	
-	@Bean
+//	@Bean
 	CommandLineRunner ejemplos(EjemplosDatos demos) {
 		return _ -> {
 //			demos.run();
