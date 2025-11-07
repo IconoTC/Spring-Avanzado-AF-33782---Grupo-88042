@@ -17,4 +17,14 @@ public final class CadenasValidator {
 	public static boolean isNotNIF(String value) {
 		return !isNIF(value);
 	}
+
+	public static boolean isNotOnlyBlank(String value) {
+		if(value == null)
+			throw new IllegalArgumentException("No puede ser nulo");
+		return !value.isBlank();
+	}
+	
+	public static boolean isOnlyBlank(String value) {
+		return !isNotOnlyBlank(value);
+	}
 }
